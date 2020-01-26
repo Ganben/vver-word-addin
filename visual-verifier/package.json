@@ -26,7 +26,11 @@
     "validate": "office-addin-manifest validate manifest.xml",
     "watch": "webpack --mode development --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "merkle-tools": "^1.4.0",
+    "merkletreejs": "^0.1.7",
+    "qrcode": "^1.4.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/polyfill": "^7.6.0",

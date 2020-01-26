@@ -1,3 +1,5 @@
+# Word Add-In: Visual Verified for signed/encrypted document
+
 ## Motivation
 
 a word add-in, use common-API and Word-API to:
@@ -16,3 +18,14 @@ page hashes --> document hash(img/finger prints hex)
 
 `npm start`
 PS: need a PS command turn on web settings ? add later
+
+
+#### deps
+
+npm:
+
+qrcode
+merkletreejs
+merkle-tools
+
+? import/require fail

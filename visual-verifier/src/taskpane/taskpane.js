@@ -5,13 +5,17 @@
 
 /* global document, Office, Word */
 import { base64Image } from "./base64Image";
+// import { MerkleTools } from "../../node_modules/merkle-tools/merkletools";
+// import { MerkleTools } from "merkle-tools";
+const { MerkleTree } = require('merkletreejs');
+const SHA256 = require('crypto-js/sha256');
 
 Office.onReady(info => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     
-    // document.getElementById("run").onclick = run;
+    document.getElementById("run").onclick = run;
   }
   // Determine if the user's version of Office supports all the Office.js APIs that are used in the tutorial.
   if (!Office.context.requirements.isSetSupported('WordApi', '1.3')) {
@@ -102,6 +106,10 @@ serviceNameContentControl.color = "blue";
   });
 }
 
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 function replaceContentInControl() {
   Word.run(function (context) {
 
@@ -126,11 +134,34 @@ export async function run() {
      */
 
     // insert a paragraph at the end of the document.
-    const paragraph = context.document.body.insertParagraph("Hello World", Word.InsertLocation.end);
-
+    // const paragraph = context.document.body.insertParagraph("Hello World", Word.InsertLocation.end);
+    const paras = context.document.body.paragraphs;
     // change the paragraph color to blue.
-    paragraph.font.color = "black";
-
+    context.load(paras, "text");
     await context.sync();
+
+    // var merkleTools = new MerkleTools();
+    var textList = [];
+    paras.items.forEach(function (item, index) {
+    //   // console.log(item, index);
+    //   merkleTools.addLeaf(item.text, true);
+    textList.push(item.text);
+    });
+    const leaves = textList.map(x => SHA256(x));
+    const tree = new MerkleTree(leaves, SHA256);
+    const root = tree.getRoot().toString('hex');
+    // // paragraph.font.color = "black";
+    // merkleTools.makeTree();
+    // if (merkleTools.getTreeReadyState()) {
+    //   var treeRoot = merkleTools.getMerkleRoot();
+    // } else {
+    //   await sleep(1000);
+    //   var treeRoot = merkleTools.getMerkleRoot();
+    // }
+    const para = context.document.body.insertParagraph("RootHash:0x"+root, Word.InsertLocation.end);
+    para.font.color = "red";
+    await context.sync();
+
+    //
   });
 }
