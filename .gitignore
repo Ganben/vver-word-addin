@@ -2,5 +2,6 @@ node_modules/
 bower_components/
 *.log
 Word-Paragraph-Codex/
+Word-Pane-React/
 build/
 dist/

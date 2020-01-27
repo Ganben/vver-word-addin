@@ -29,7 +29,8 @@
   "dependencies": {
     "merkle-tools": "^1.4.0",
     "merkletreejs": "^0.1.7",
-    "qrcode": "^1.4.4"
+    "qrcode": "^1.4.4",
+    "qrious": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",

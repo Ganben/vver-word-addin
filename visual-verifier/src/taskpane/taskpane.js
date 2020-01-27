@@ -7,6 +7,8 @@
 import { base64Image } from "./base64Image";
 // import { MerkleTools } from "../../node_modules/merkle-tools/merkletools";
 // import { MerkleTools } from "merkle-tools";
+// const { QRCode }  = require('qrcode');
+var QRious = require('qrious');
 const { MerkleTree } = require('merkletreejs');
 const SHA256 = require('crypto-js/sha256');
 
@@ -158,10 +160,48 @@ export async function run() {
     //   await sleep(1000);
     //   var treeRoot = merkleTools.getMerkleRoot();
     // }
-    const para = context.document.body.insertParagraph("RootHash:0x"+root, Word.InsertLocation.end);
-    para.font.color = "red";
-    await context.sync();
+    // get first par
+    
+    var pf = context.document.body.paragraphs.getFirstOrNullObject();
+    // await context.sync();
+    var i = 0;
+    // for (i = 0; i<textList.length;i++) {
+    //   if (pf != null) {
+    //     pf.leftIndent = 80;
+    //     pf = pf.get.getNext();
+    //     // pf.insertInlinePictureFromBase64(bimg.substr(22),"End");
+    //   } 
+    // }
 
-    //
-  });
+    await context.sync();
+    const para = context.document.body.insertParagraph("Paras:"+textList.length + " RootHash:0x"+root, Word.InsertLocation.end);
+    
+ 
+    para.font.color = "blue";
+    para.leftIndent = 20;
+    para.alignment = "Centered";
+    // await context.sync();
+    
+    var qr = new QRious({
+      value: root,
+      background: 'green',
+      backgroundAlpha: 0.8,
+      level: 'M',
+      padding: 5,
+      size: 200
+    });
+    var base64img = qr.toDataURL();
+    const ppic = context.document.body.insertInlinePictureFromBase64(base64img.substr(22), "End");
+    // const papic = context.document.body.insertParagraph(base64img.substr(23), 'End');
+    ppic.alignment = "Centered";
+    await context.sync();
+    // do for each pars
+    
+    
+  }).catch(function (error) {
+    console.log("Error: " + error);
+    if (error instanceof OfficeExtension.Error) {
+        console.log("Debug info: " + JSON.stringify(error.debugInfo));
+    }
+});
 }
