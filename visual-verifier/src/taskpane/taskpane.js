@@ -162,16 +162,18 @@ export async function run() {
     // }
     // get first par
     
-    var pf = context.document.body.paragraphs.getFirstOrNullObject();
+    const pf = context.document.body.paragraphs.getFirstOrNullObject();
+    // pf.leftIndent = 80;
     // await context.sync();
     var i = 0;
-    // for (i = 0; i<textList.length;i++) {
-    //   if (pf != null) {
-    //     pf.leftIndent = 80;
-    //     pf = pf.get.getNext();
-    //     // pf.insertInlinePictureFromBase64(bimg.substr(22),"End");
-    //   } 
-    // }
+    for (i = 0; i<textList.length;i++) {
+      if (pf != null) {
+        pf.leftIndent = 80;
+        pf = pf.get.getNextOrNullObject();
+        // pf.insertInlinePictureFromBase64(bimg.substr(22),"End");
+        await context.sync();
+      } 
+    }
 
     await context.sync();
     const para = context.document.body.insertParagraph("Paras:"+textList.length + " RootHash:0x"+root, Word.InsertLocation.end);
