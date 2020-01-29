@@ -162,15 +162,31 @@ export async function run() {
     // }
     // get first par
     
-    const pf = context.document.body.paragraphs.getFirstOrNullObject();
+    var pf = context.document.body.paragraphs.getFirstOrNullObject();
     // pf.leftIndent = 80;
+    // pf = pf.getNextOrNullObject();
+    // pf.leftIndent = 90;
     // await context.sync();
     var i = 0;
-    for (i = 0; i<textList.length;i++) {
+    for (i = 0; i<textList.length; i++) {
       if (pf != null) {
-        pf.leftIndent = 80;
-        pf = pf.get.getNextOrNullObject();
-        // pf.insertInlinePictureFromBase64(bimg.substr(22),"End");
+        pf.leftIndent = 50;
+        var qre = new QRious({
+          value: textList[i],
+          level: 'M',
+          size: 100
+        });
+        var bimge = qre.toDataURL();
+        pf.insertInlinePictureFromBase64(bimge.substr(22),"Start");
+        var qrs = new QRious({
+          value: leaves[i].toString(),
+          background:'blue',
+          level: 'M',
+          size:100
+        });
+        var bimgs = qrs.toDataURL();
+        pf.insertInlinePictureFromBase64(bimgs.substr(22),"End");
+        pf = pf.getNextOrNullObject();
         await context.sync();
       } 
     }
@@ -186,10 +202,10 @@ export async function run() {
     
     var qr = new QRious({
       value: root,
-      background: 'green',
+      background: 'red',
       backgroundAlpha: 0.8,
       level: 'M',
-      padding: 5,
+      // padding: 5,
       size: 200
     });
     var base64img = qr.toDataURL();
