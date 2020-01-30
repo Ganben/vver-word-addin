@@ -177,7 +177,8 @@ export async function run() {
           size: 100
         });
         var bimge = qre.toDataURL();
-        pf.insertInlinePictureFromBase64(bimge.substr(22),"Start");
+        pf.insertTable(1,1,"Before",[[textList[i]]]);
+        pf.insertInlinePictureFromBase64(bimge.substr(22),"End");
         var qrs = new QRious({
           value: leaves[i].toString(),
           background:'blue',
@@ -187,7 +188,7 @@ export async function run() {
         var bimgs = qrs.toDataURL();
         pf.insertInlinePictureFromBase64(bimgs.substr(22),"End");
         pf = pf.getNextOrNullObject();
-        await context.sync();
+        // await context.sync();
       } 
     }
 
