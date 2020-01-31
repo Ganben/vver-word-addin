@@ -10,3 +10,4 @@ function paraLimiter() {
 
 
 export { paraLimiter };
+module.exports = paraLimiter;

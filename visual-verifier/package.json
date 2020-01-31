@@ -24,7 +24,8 @@
     "start:web": "office-addin-debugging start manifest.xml web",
     "stop": "office-addin-debugging stop manifest.xml",
     "validate": "office-addin-manifest validate manifest.xml",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "test": "jest"
   },
   "dependencies": {
     "merkle-tools": "^1.4.0",
@@ -45,6 +46,7 @@
     "file-loader": "^4.2.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^25.1.0",
     "office-addin-cli": "^1.0.3",
     "office-addin-debugging": "^3.0.17",
     "office-addin-dev-certs": "^1.4.10",
