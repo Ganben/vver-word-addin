@@ -11,6 +11,12 @@ import { base64Image } from "./base64Image";
 var QRious = require('qrious');
 const { MerkleTree } = require('merkletreejs');
 const SHA256 = require('crypto-js/sha256');
+var crypto = require("crypto");
+var eccrypto = require("eccrypto");
+// A new random 32-byte private key.
+var privateKey = eccrypto.generatePrivate();
+// Corresponding uncompressed (65-byte) public key.
+var publicKey = eccrypto.getPublic(privateKey);
 
 Office.onReady(info => {
   if (info.host === Office.HostType.Word) {
@@ -177,7 +183,18 @@ export async function run() {
           size: 100
         });
         var bimge = qre.toDataURL();
-        pf.insertTable(1,1,"Before",[[textList[i]]]);
+        var msg = crypto.createHash("sha256").update(textList[i]).digest();
+        var sssig;
+        eccrypto.sign(privateKey, msg).then(function(sig) {
+          console.log("Signature in DER format:", sig);
+          eccrypto.verify(publicKey, msg, sig).then(function() {
+            sssig = sig.toString();
+            console.log("Signature is OK");
+          }).catch(function() {
+            console.log("Signature is BAD");
+          });
+        });
+        pf.insertTable(2,1,"Before",[[textList[i]],[sssig]]);
         pf.insertInlinePictureFromBase64(bimge.substr(22),"End");
         var qrs = new QRious({
           value: leaves[i].toString(),
