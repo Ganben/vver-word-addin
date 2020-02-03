@@ -12,11 +12,19 @@ var QRious = require('qrious');
 const { MerkleTree } = require('merkletreejs');
 const SHA256 = require('crypto-js/sha256');
 var crypto = require("crypto");
-var eccrypto = require("eccrypto");
+// var eccrypto = require("eccrypto");
 // A new random 32-byte private key.
-var privateKey = eccrypto.generatePrivate();
+// var privateKey = eccrypto.generatePrivate();
 // Corresponding uncompressed (65-byte) public key.
-var publicKey = eccrypto.getPublic(privateKey);
+// var publicKey = eccrypto.getPublic(privateKey);
+
+// another lib
+var EC = require('elliptic').ec;
+
+// Create and initialize EC context
+// (better do it once and reuse it)
+var ec = new EC('secp256k1');
+
 
 Office.onReady(info => {
   if (info.host === Office.HostType.Word) {
@@ -174,6 +182,7 @@ export async function run() {
     // pf.leftIndent = 90;
     // await context.sync();
     var i = 0;
+    var key = ec.genKeyPair();
     for (i = 0; i<textList.length; i++) {
       if (pf != null) {
         pf.leftIndent = 50;
@@ -183,18 +192,24 @@ export async function run() {
           size: 100
         });
         var bimge = qre.toDataURL();
+        
         var msg = crypto.createHash("sha256").update(textList[i]).digest();
-        var sssig;
-        eccrypto.sign(privateKey, msg).then(function(sig) {
-          console.log("Signature in DER format:", sig);
-          eccrypto.verify(publicKey, msg, sig).then(function() {
-            sssig = sig.toString();
-            console.log("Signature is OK");
-          }).catch(function() {
-            console.log("Signature is BAD");
-          });
-        });
-        pf.insertTable(2,1,"Before",[[textList[i]],[sssig]]);
+        var sig =  key.sign(msg);
+        // var msg = crypto.createHash("sha256").update(textList[i]).digest();
+        // var sssig;
+        // sssig = eccrypto.sign(privateKey, msg).then(function(sig) {
+        //   console.log("Signature in DER format:", sig);
+        //   eccrypto.verify(publicKey, msg, sig).then(function() {
+        //     // sssig = sig.toString();
+        //     return sig.toString();
+        //     console.log("Signature is OK");
+        //   }).catch(function() {
+        //     console.log("Signature is BAD");
+        //   });
+        // });
+
+
+        pf.insertTable(3,1,"Before",[[textList[i]],[msg],[sig.toDER('hex')]]);
         pf.insertInlinePictureFromBase64(bimge.substr(22),"End");
         var qrs = new QRious({
           value: leaves[i].toString(),
